@@ -37,9 +37,10 @@ All tokens live in `:root` inside `index.html`. Single source of truth.
 
 | Token | Font | Use |
 |---|---|---|
-| `--font-display` | **General Sans** (Fontshare, 400/500/600) | All headings, nav logo, body copy. The whole voice. |
+| `--font-display` | **General Sans** (Fontshare, 400/500/600) | All headings and body copy. The whole voice. |
 | `--font-sans` | General Sans | Alias for body/UI. |
 | `--font-mono` | **Geist Mono** (Google Fonts, 400/500) | Annotation layer only: badges, indices, eyebrows, coordinates-style labels, morph, fineprint. |
+| **Geist** (Google Fonts, 300/500) | Logo wordmark only — the `/` is 300, `atlas` is 500. Loaded exclusively for the logo lockup; nothing else uses it. |
 
 No serif in the system. Italics are avoided — emphasis is done with weight and color.
 
@@ -64,7 +65,7 @@ No serif in the system. Italics are avoided — emphasis is done with weight and
 | Section headline (connect) | General Sans | `clamp(30px, 4.2vw, 46px)` | 500 | `-0.03em` | |
 | Philosophy statement | General Sans | `clamp(30px, 4.4vw, 48px)` | 500 | `-0.025em` | |
 | Card title | General Sans | `26px` | 500 | `-0.02em` | |
-| Nav logo `/atlas` | General Sans | `24px` | 500 | `-0.01em` | |
+| Nav logo `/atlas` | Geist lockup | `23px` | 300 `/` + 500 `atlas` | `-0.6px` | Constellation mark beside it; see §7. |
 | Transition line | General Sans | `22px` | 500 | `-0.01em` | |
 | Hero morph | Geist Mono | `22px` | 400 | `0.01em` | The typed `/atlas`. |
 | Hero annotation (right) | General Sans | `19px` | 500 | `-0.01em` | "Knowledge is a map, not a list." |
@@ -92,7 +93,7 @@ Vertical rhythm: sections are separated generously (110–170px). The page breat
 ## 4. Components
 
 ### Nav
-- Left: `/atlas` wordmark (General Sans 500). Right: mono uppercase `GitHub` link + ink pill CTA ("Let's connect" → `#connect`).
+- Left: the full logo lockup — constellation mark + `/atlas` wordmark (Geist 300 `/`, 500 `atlas`; source `logo.svg`). Right: mono uppercase `GitHub` link + ink pill CTA ("Let's connect" → `#connect`).
 - Mobile: wordmark + hamburger (links hidden).
 
 ### Hero morph (the brand moment)
@@ -153,7 +154,9 @@ Order back to front: paper → survey grid → grain → bloom → contours/grap
 ## 7. Iconography & marks
 
 - **Compass star ✦** (`&#10022;`): the recurring brand mark — hero annotation, philosophy, waitlist-era success. Rendered in `--accent`.
-- **Favicon:** rounded square in `--blue`, ivory `/` glyph, accent dot. Encoded as inline SVG data URI.
+- **Constellation mark:** three `--accent` nodes joined by lines — the "knowledge graph" triangle that is the logo's mark. Used in the favicon, nav and footer. Not an emoji — it is the designed mark.
+- **Logo files:** `logo.svg` (full lockup — mark + wordmark), `logo-mark.svg` (mark only, transparent, 44×44), `logo-wordmark.svg` (wordmark only). Wordmark = Geist 300 `/` + Geist 500 `atlas` on the original 340×88 canvas.
+- **Favicon:** rounded square in `--blue` with the constellation mark (three `--accent` nodes, connecting lines at 0.8 opacity). Encoded as inline SVG data URI. The full logo (mark + wordmark) lives in `logo.svg`.
 - **Arrows:** 13px stroke-1.3 line arrows; slide on hover. Download arrow on the skill card.
 - **LinkedIn glyph:** standard logo path, `currentColor`, 16px, inside the connect pill.
 
@@ -191,7 +194,7 @@ Tone: first person ("I'm Harsh — the one building Atlas."), calm, no hype, no 
 ## 10. Implementation notes
 
 - Single self-contained `index.html` — no build step. All CSS in one `<style>`, all JS in one `<script>`.
-- Fonts: General Sans via Fontshare CDN; Geist Mono via Google Fonts. Both have system fallbacks.
+- Fonts: General Sans via Fontshare CDN; Geist (logo only) + Geist Mono via Google Fonts. All have system fallbacks.
 - Favicon and OG tags are inline / in `<head>`; `og:image` expects an `og.png` in the site root (not yet added).
 - Real URLs: obsidian-agent → `github.com/harsh-jos/obsidian-agent`; everything else GitHub → `github.com/harsh-jos`; connect → `linkedin.com/in/harsh-jos`.
 - To re-skin: change the tokens in `:root`. The system is token-driven; nothing is hardcoded except inline SVG fills (noted in the illustration section).

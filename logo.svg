@@ -1,0 +1,15 @@
+<svg viewBox="0 0 340 88" xmlns="http://www.w3.org/2000/svg">
+  <!-- /atlas logo — constellation mark + wordmark.
+       Extracted from the logo tool output (src/App.tsx), 2026-08-02.
+       Wordmark renders in Geist; falls back to Inter/system sans. -->
+  <!-- Constellation mark -->
+  <circle cx="22" cy="18" r="3.5" fill="#66A3FF" />
+  <circle cx="10" cy="42" r="3.5" fill="#66A3FF" />
+  <circle cx="34" cy="42" r="3.5" fill="#66A3FF" />
+  <line x1="22" y1="18" x2="10" y2="42" stroke="#66A3FF" stroke-width="1.5" stroke-linecap="round" opacity="0.55" />
+  <line x1="22" y1="18" x2="34" y2="42" stroke="#66A3FF" stroke-width="1.5" stroke-linecap="round" opacity="0.55" />
+  <line x1="10" y1="42" x2="34" y2="42" stroke="#66A3FF" stroke-width="1.5" stroke-linecap="round" opacity="0.55" />
+  <!-- Wordmark: /atlas -->
+  <text x="55" y="47" font-family="'Geist', 'Inter', sans-serif" font-size="36" font-weight="300" fill="#66A3FF" letter-spacing="-0.5">/</text>
+  <text x="74" y="47" font-family="'Geist', 'Inter', sans-serif" font-size="36" font-weight="500" fill="#0f0f0f" letter-spacing="-1">atlas</text>
+</svg>

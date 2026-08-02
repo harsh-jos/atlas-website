@@ -1,0 +1,7 @@
+<svg viewBox="46 0 144 88" xmlns="http://www.w3.org/2000/svg">
+  <!-- /atlas wordmark only (no mark), 2026-08-02.
+       Same type styling as logo.svg: "/" = Geist 300 in #66A3FF, "atlas" = Geist 500 in #0f0f0f.
+       Falls back to Inter/system sans when Geist isn't loaded. -->
+  <text x="55" y="47" font-family="'Geist', 'Inter', sans-serif" font-size="36" font-weight="300" fill="#66A3FF" letter-spacing="-0.5">/</text>
+  <text x="74" y="47" font-family="'Geist', 'Inter', sans-serif" font-size="36" font-weight="500" fill="#0f0f0f" letter-spacing="-1">atlas</text>
+</svg>

@@ -1,0 +1,11 @@
+<svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- /atlas constellation mark (mark only, transparent).
+       Same geometry as logo.svg, scaled to a 44x44 square, 2026-08-02.
+       For avatars, favicons, socials and small sizes. -->
+  <circle cx="22" cy="5.2" r="4.9" fill="#66A3FF" />
+  <circle cx="5.2" cy="38.8" r="4.9" fill="#66A3FF" />
+  <circle cx="38.8" cy="38.8" r="4.9" fill="#66A3FF" />
+  <line x1="22" y1="5.2" x2="5.2" y2="38.8" stroke="#66A3FF" stroke-width="2.1" stroke-linecap="round" opacity="0.55" />
+  <line x1="22" y1="5.2" x2="38.8" y2="38.8" stroke="#66A3FF" stroke-width="2.1" stroke-linecap="round" opacity="0.55" />
+  <line x1="5.2" y1="38.8" x2="38.8" y2="38.8" stroke="#66A3FF" stroke-width="2.1" stroke-linecap="round" opacity="0.55" />
+</svg>
