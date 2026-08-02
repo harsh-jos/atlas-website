@@ -923,33 +923,40 @@
         <span class="card-index">01</span>
         <div class="card-illustration">
           <svg width="260" height="152" viewBox="0 0 260 152" fill="none">
-            <!-- note panel -->
+            <!-- panel -->
             <rect x="10" y="8" width="240" height="136" rx="12" fill="#FCFAF4" stroke="#201C16" stroke-opacity="0.12"/>
-            <!-- graph edges, hub (110,42) to every other note -->
-            <line x1="110" y1="42" x2="52" y2="42" stroke="#201C16" stroke-width="0.8" opacity="0.28"/>
-            <line x1="110" y1="42" x2="168" y2="42" stroke="#201C16" stroke-width="0.8" opacity="0.28"/>
-            <line x1="110" y1="42" x2="66" y2="100" stroke="#201C16" stroke-width="0.8" opacity="0.22"/>
-            <line x1="110" y1="42" x2="124" y2="100" stroke="#201C16" stroke-width="0.8" opacity="0.22"/>
-            <line x1="110" y1="42" x2="182" y2="100" stroke="#201C16" stroke-width="0.8" opacity="0.22"/>
-            <line x1="52" y1="42" x2="66" y2="100" stroke="#201C16" stroke-width="0.8" opacity="0.18"/>
-            <line x1="168" y1="42" x2="182" y2="100" stroke="#201C16" stroke-width="0.8" opacity="0.18"/>
-            <line x1="124" y1="100" x2="182" y2="100" stroke="#201C16" stroke-width="0.8" opacity="0.16"/>
-            <!-- notes, top row -->
-            <rect x="26" y="26" width="52" height="32" rx="5" fill="#FCFAF4" stroke="#201C16" stroke-opacity="0.3"/>
-            <rect x="84" y="26" width="52" height="32" rx="5" fill="#FCFAF4" stroke="#2E4A85" stroke-opacity="0.55"/>
-            <rect x="142" y="26" width="52" height="32" rx="5" fill="#FCFAF4" stroke="#201C16" stroke-opacity="0.3"/>
-            <!-- notes, bottom row -->
-            <rect x="40" y="84" width="52" height="32" rx="5" fill="#FCFAF4" stroke="#201C16" stroke-opacity="0.3"/>
-            <rect x="98" y="84" width="52" height="32" rx="5" fill="#FCFAF4" stroke="#201C16" stroke-opacity="0.3"/>
-            <rect x="156" y="84" width="52" height="32" rx="5" fill="#FCFAF4" stroke="#201C16" stroke-opacity="0.3"/>
+            <!-- faint dot texture -->
+            <g fill="#201C16" opacity="0.08">
+              <circle cx="26" cy="24" r="1"/><circle cx="46" cy="24" r="1"/><circle cx="66" cy="24" r="1"/><circle cx="86" cy="24" r="1"/><circle cx="106" cy="24" r="1"/><circle cx="126" cy="24" r="1"/><circle cx="146" cy="24" r="1"/><circle cx="166" cy="24" r="1"/><circle cx="186" cy="24" r="1"/><circle cx="206" cy="24" r="1"/><circle cx="226" cy="24" r="1"/>
+            </g>
+            <!-- edges, hub to primary notes -->
+            <line x1="130" y1="86" x2="60" y2="50" stroke="#201C16" stroke-width="1" opacity="0.22"/>
+            <line x1="130" y1="86" x2="190" y2="48" stroke="#201C16" stroke-width="1" opacity="0.22"/>
+            <line x1="130" y1="86" x2="222" y2="98" stroke="#201C16" stroke-width="1" opacity="0.22"/>
+            <line x1="130" y1="86" x2="150" y2="128" stroke="#201C16" stroke-width="1" opacity="0.22"/>
+            <line x1="130" y1="86" x2="66" y2="118" stroke="#201C16" stroke-width="1" opacity="0.22"/>
+            <!-- secondary, fainter surfaced notes -->
+            <line x1="60" y1="50" x2="32" y2="74" stroke="#201C16" stroke-width="0.8" stroke-dasharray="1 4" opacity="0.28"/>
+            <line x1="222" y1="98" x2="240" y2="122" stroke="#201C16" stroke-width="0.8" stroke-dasharray="1 4" opacity="0.28"/>
+            <line x1="150" y1="128" x2="112" y2="136" stroke="#201C16" stroke-width="0.8" stroke-dasharray="1 4" opacity="0.28"/>
             <!-- pulsing hub -->
-            <circle cx="110" cy="42" r="14" fill="#66A3FF" opacity="0.14">
-              <animate attributeName="r" values="10;16;10" dur="3s" repeatCount="indefinite"/>
+            <circle cx="130" cy="86" r="15" fill="#66A3FF" opacity="0.14">
+              <animate attributeName="r" values="11;17;11" dur="3s" repeatCount="indefinite"/>
               <animate attributeName="opacity" values="0.2;0.06;0.2" dur="3s" repeatCount="indefinite"/>
             </circle>
-            <circle cx="110" cy="42" r="4" fill="#2E4A85"/>
+            <circle cx="130" cy="86" r="6.5" fill="#2E4A85"/>
+            <!-- primary notes -->
+            <circle cx="60" cy="50" r="4.5" fill="#FCFAF4" stroke="#2E4A85" stroke-width="1.3"/>
+            <circle cx="190" cy="48" r="4.5" fill="#FCFAF4" stroke="#2E4A85" stroke-width="1.3"/>
+            <circle cx="222" cy="98" r="4.5" fill="#FCFAF4" stroke="#2E4A85" stroke-width="1.3"/>
+            <circle cx="150" cy="128" r="4.5" fill="#FCFAF4" stroke="#2E4A85" stroke-width="1.3"/>
+            <circle cx="66" cy="118" r="4.5" fill="#FCFAF4" stroke="#2E4A85" stroke-width="1.3"/>
+            <!-- secondary, smaller surfaced notes -->
+            <circle cx="32" cy="74" r="2.4" fill="#A39B8C" opacity="0.7"/>
+            <circle cx="240" cy="122" r="2.4" fill="#A39B8C" opacity="0.7"/>
+            <circle cx="112" cy="136" r="2.4" fill="#A39B8C" opacity="0.7"/>
             <!-- label -->
-            <text x="26" y="132" font-family="Geist Mono, monospace" font-size="7.5" fill="#2E4A85" opacity="0.8">obsidian://vault</text>
+            <text x="26" y="26" font-family="Geist Mono, monospace" font-size="7.5" fill="#2E4A85" opacity="0.85">obsidian://vault</text>
           </svg>
         </div>
         <div class="card-body">
@@ -969,25 +976,32 @@
         <div class="card-illustration">
           <svg width="260" height="152" viewBox="0 0 260 152" fill="none">
             <rect x="10" y="8" width="240" height="136" rx="12" fill="#FCFAF4" stroke="#201C16" stroke-opacity="0.12"/>
-            <!-- faint alternative route -->
-            <path d="M30 118 C 78 128, 118 104, 166 114 S 234 110, 236 90" stroke="#2E4A85" stroke-width="1" stroke-dasharray="2 5" opacity="0.3"/>
-            <!-- main route, drawn through every waypoint -->
-            <path d="M30 128 C 40 127, 47 122, 55 120 C 70 117, 83 110, 95 104 C 112 98, 126 92, 140 86 C 158 80, 171 71, 185 62 C 199 54, 211 48, 222 44" stroke="#201C16" stroke-width="1.4" opacity="0.75"/>
-            <path d="M30 128 C 40 127, 47 122, 55 120 C 70 117, 83 110, 95 104 C 112 98, 126 92, 140 86 C 158 80, 171 71, 185 62 C 199 54, 211 48, 222 44" stroke="#2E4A85" stroke-width="1.4" stroke-dasharray="1 9" stroke-linecap="round"/>
+            <!-- chart axes -->
+            <line x1="26" y1="18" x2="26" y2="132" stroke="#201C16" stroke-width="1" opacity="0.16"/>
+            <line x1="26" y1="132" x2="238" y2="132" stroke="#201C16" stroke-width="1" opacity="0.16"/>
+            <line x1="76" y1="128" x2="76" y2="136" stroke="#201C16" stroke-width="1" opacity="0.16"/>
+            <line x1="130" y1="128" x2="130" y2="136" stroke="#201C16" stroke-width="1" opacity="0.16"/>
+            <line x1="180" y1="128" x2="180" y2="136" stroke="#201C16" stroke-width="1" opacity="0.16"/>
+            <!-- route, plotted as an ascending curve through every waypoint -->
+            <path d="M26 132 C 50 124, 60 116, 76 110 C 96 102, 112 92, 130 82 C 150 70, 164 62, 180 54 C 196 46, 212 38, 228 28" stroke="#201C16" stroke-width="1.4" opacity="0.7"/>
+            <path d="M26 132 C 50 124, 60 116, 76 110 C 96 102, 112 92, 130 82 C 150 70, 164 62, 180 54 C 196 46, 212 38, 228 28" stroke="#2E4A85" stroke-width="1.4" stroke-dasharray="1 9" stroke-linecap="round"/>
             <!-- start -->
-            <circle cx="30" cy="128" r="5" fill="#FCFAF4" stroke="#2E4A85" stroke-width="1.6"/>
-            <text x="30" y="143" text-anchor="middle" font-family="Geist Mono, monospace" font-size="7" fill="#201C16" opacity="0.6">start</text>
+            <circle cx="26" cy="132" r="5" fill="#FCFAF4" stroke="#2E4A85" stroke-width="1.6"/>
+            <text x="26" y="146" text-anchor="middle" font-family="Geist Mono, monospace" font-size="7" fill="#201C16" opacity="0.6">start</text>
             <!-- waypoints, centered on the path -->
-            <circle cx="55" cy="120" r="3.2" fill="#2E4A85"/>
-            <text x="55" y="112" text-anchor="middle" font-family="Geist Mono, monospace" font-size="7" fill="#201C16" opacity="0.6">01</text>
-            <circle cx="95" cy="104" r="3.2" fill="#2E4A85"/>
-            <text x="95" y="96" text-anchor="middle" font-family="Geist Mono, monospace" font-size="7" fill="#201C16" opacity="0.6">02</text>
-            <circle cx="140" cy="86" r="3.2" fill="#2E4A85"/>
-            <text x="140" y="78" text-anchor="middle" font-family="Geist Mono, monospace" font-size="7" fill="#201C16" opacity="0.6">03</text>
-            <!-- destination star, centered on the path end -->
-            <path d="M222 35 L225.2 41.8 L232 45 L225.2 48.2 L222 55 L218.8 48.2 L212 45 L218.8 41.8 Z" fill="#66A3FF"/>
-            <text x="222" y="29" text-anchor="middle" font-family="Geist Mono, monospace" font-size="7" fill="#201C16" opacity="0.6">04</text>
-            <text x="250" y="141" text-anchor="end" font-family="Geist Mono, monospace" font-size="7.5" fill="#2E4A85" opacity="0.8">slash-atlas.live/platform</text>
+            <circle cx="76" cy="110" r="3.2" fill="#2E4A85"/>
+            <text x="76" y="120" text-anchor="middle" font-family="Geist Mono, monospace" font-size="7" fill="#201C16" opacity="0.6">01</text>
+            <circle cx="130" cy="82" r="3.2" fill="#2E4A85"/>
+            <text x="130" y="74" text-anchor="middle" font-family="Geist Mono, monospace" font-size="7" fill="#201C16" opacity="0.6">02</text>
+            <circle cx="180" cy="54" r="3.2" fill="#2E4A85"/>
+            <text x="180" y="46" text-anchor="middle" font-family="Geist Mono, monospace" font-size="7" fill="#201C16" opacity="0.6">03</text>
+            <!-- destination, glowing goal -->
+            <circle cx="228" cy="28" r="13" fill="#66A3FF" opacity="0.16">
+              <animate attributeName="r" values="10;15;10" dur="3s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.22;0.08;0.22" dur="3s" repeatCount="indefinite"/>
+            </circle>
+            <path d="M228 18 L231.2 24.8 L238 28 L231.2 31.2 L228 38 L224.8 31.2 L218 28 L224.8 24.8 Z" fill="#66A3FF"/>
+            <text x="207" y="20" text-anchor="middle" font-family="Geist Mono, monospace" font-size="7" fill="#201C16" opacity="0.6">04</text>
           </svg>
         </div>
         <div class="card-body">
@@ -1004,26 +1018,38 @@
         <div class="card-illustration">
           <svg width="260" height="152" viewBox="0 0 260 152" fill="none">
             <rect x="10" y="8" width="240" height="136" rx="12" fill="#FCFAF4" stroke="#201C16" stroke-opacity="0.12"/>
+            <!-- agent nodes feeding into the skill file -->
+            <line x1="34" y1="40" x2="70" y2="66" stroke="#201C16" stroke-width="1" opacity="0.25"/>
+            <line x1="34" y1="76" x2="70" y2="76" stroke="#201C16" stroke-width="1" opacity="0.25"/>
+            <line x1="34" y1="112" x2="70" y2="86" stroke="#201C16" stroke-width="1" opacity="0.25"/>
+            <!-- claude code -->
+            <rect x="18" y="30" width="20" height="20" rx="6" fill="#FCFAF4" stroke="#201C16" stroke-opacity="0.32"/>
+            <path d="M25 36 L22 40 L25 44 M31 36 L34 40 L31 44" stroke="#2E4A85" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- codex -->
+            <rect x="18" y="66" width="20" height="20" rx="6" fill="#FCFAF4" stroke="#201C16" stroke-opacity="0.32"/>
+            <circle cx="28" cy="76" r="5" fill="none" stroke="#2E4A85" stroke-width="1.3"/>
+            <circle cx="28" cy="76" r="1.4" fill="#2E4A85"/>
+            <!-- any other agent -->
+            <rect x="18" y="102" width="20" height="20" rx="6" fill="#FCFAF4" stroke="#201C16" stroke-opacity="0.32"/>
+            <path d="M28 107 v10 M23 112 h10" stroke="#2E4A85" stroke-width="1.3" stroke-linecap="round"/>
             <!-- the skill file -->
-            <rect x="60" y="16" width="140" height="120" rx="10" fill="#FCFAF4" stroke="#201C16" stroke-opacity="0.28"/>
-            <path d="M200 16 L200 40 L176 40 Z" fill="#E7ECF5" stroke="#201C16" stroke-opacity="0.28" stroke-linejoin="round"/>
+            <rect x="70" y="16" width="150" height="120" rx="10" fill="#FCFAF4" stroke="#201C16" stroke-opacity="0.28"/>
+            <path d="M220 16 L220 40 L196 40 Z" fill="#E7ECF5" stroke="#201C16" stroke-opacity="0.28" stroke-linejoin="round"/>
             <!-- window dots -->
-            <circle cx="74" cy="30" r="2.2" fill="#66A3FF"/>
-            <circle cx="82" cy="30" r="2.2" fill="#2E4A85" opacity="0.7"/>
-            <circle cx="90" cy="30" r="2.2" fill="#201C16" opacity="0.3"/>
+            <circle cx="84" cy="30" r="2.2" fill="#66A3FF"/>
+            <circle cx="92" cy="30" r="2.2" fill="#2E4A85" opacity="0.7"/>
+            <circle cx="100" cy="30" r="2.2" fill="#201C16" opacity="0.3"/>
             <!-- file contents -->
-            <text x="74" y="56" font-family="Geist Mono, monospace" font-size="9" fill="#2E4A85" font-weight="500">/atlas.skill</text>
-            <text x="74" y="74" font-family="Geist Mono, monospace" font-size="7.5" fill="#201C16" opacity="0.65">learn:</text>
-            <text x="110" y="74" font-family="Geist Mono, monospace" font-size="7.5" fill="#201C16" opacity="0.4">anything</text>
-            <text x="74" y="88" font-family="Geist Mono, monospace" font-size="7.5" fill="#201C16" opacity="0.65">context:</text>
-            <text x="110" y="88" font-family="Geist Mono, monospace" font-size="7.5" fill="#201C16" opacity="0.4">your vault</text>
-            <text x="74" y="102" font-family="Geist Mono, monospace" font-size="7.5" fill="#201C16" opacity="0.65">sources:</text>
-            <text x="110" y="102" font-family="Geist Mono, monospace" font-size="7.5" fill="#201C16" opacity="0.4">curated</text>
-            <text x="74" y="116" font-family="Geist Mono, monospace" font-size="7.5" fill="#201C16" opacity="0.65">memory:</text>
-            <text x="110" y="116" font-family="Geist Mono, monospace" font-size="7.5" fill="#201C16" opacity="0.4">atlas.json</text>
+            <text x="86" y="52" font-family="Geist Mono, monospace" font-size="10.5" fill="#2E4A85" font-weight="500">/atlas.skill</text>
+            <text x="86" y="72" font-family="Geist Mono, monospace" font-size="8.5" fill="#201C16" opacity="0.65">learn:</text>
+            <text x="128" y="72" font-family="Geist Mono, monospace" font-size="8.5" fill="#201C16" opacity="0.4">anything</text>
+            <text x="86" y="88" font-family="Geist Mono, monospace" font-size="8.5" fill="#201C16" opacity="0.65">context:</text>
+            <text x="128" y="88" font-family="Geist Mono, monospace" font-size="8.5" fill="#201C16" opacity="0.4">your vault</text>
+            <text x="86" y="104" font-family="Geist Mono, monospace" font-size="8.5" fill="#201C16" opacity="0.65">sources:</text>
+            <text x="128" y="104" font-family="Geist Mono, monospace" font-size="8.5" fill="#201C16" opacity="0.4">curated</text>
             <!-- download chip -->
-            <rect x="148" y="96" width="40" height="26" rx="13" fill="#2E4A85"/>
-            <path d="M168 105.5 v7 M165 108.5 l3 3 3-3" stroke="#F6F2E9" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="166" y="109" width="40" height="24" rx="12" fill="#2E4A85"/>
+            <path d="M186 118 v6.5 M183 121.5 l3 3 3-3" stroke="#F6F2E9" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </div>
         <div class="card-body">
