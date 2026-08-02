@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>/atlas — Learning how to Learn</title>
+<meta name="description" content="AI made information abundant. Learning is still scarce. Atlas is a suite of tools, a skill and a platform that help you learn anything — without first figuring out how.">
+<meta name="theme-color" content="#F6F2E9">
+
+<!-- Open Graph — add an /og.png to this folder before sharing the domain -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://slash-atlas.live">
+<meta property="og:title" content="/atlas — Learning how to Learn">
+<meta property="og:description" content="You decide what to learn. Atlas handles how.">
+<meta property="og:image" content="/og.png">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- favicon: a "/" glyph — the slash -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%232E4A85'/%3E%3Cpath d='M21 6 L11 26' stroke='%23F6F2E9' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='9.5' cy='27.5' r='2.6' fill='%2366A3FF'/%3E%3C/svg%3E">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://api.fontshare.com" crossorigin>
+<link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  /* ============================================================
+     ATLAS — DESIGN TOKENS
+     paper / ink / map blue / sky accent
+     ============================================================ */
+  :root {
+    --paper:        #F6F2E9;
+    --surface:      #FCFAF4;
+    --ink:          #201C16;
+    --ink-2:        #6E675C;
+    --ink-3:        #A39B8C;
+    --line:         rgba(32, 28, 22, 0.10);
+    --line-strong:  rgba(32, 28, 22, 0.20);
+    --blue:         #2E4A85;
+    --blue-deep:    #1F3566;
+    --soft-blue:    #E7ECF5;
+    --accent:       #66A3FF;
+
+    --font-display: 'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-sans: 'General Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    --font-mono: 'Geist Mono', 'SF Mono', Consolas, monospace;
+
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --dur: 250ms;
+
+    --container: 1180px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  ::selection { background: var(--blue); color: var(--paper); }
+
+  :focus-visible {
+    outline: 2px solid var(--blue);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .container {
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+
+  /* ============================================================
+     BACKGROUND SYSTEM — paper grain / faint survey grid / bloom
+     ============================================================ */
+
+  .bg-grain {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.03;
+    mix-blend-mode: multiply;
+  }
+
+  .bg-grid {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background-image:
+      linear-gradient(var(--line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--line) 1px, transparent 1px);
+    background-size: 64px 64px;
+    opacity: 0.5;
+    mask-image: radial-gradient(ellipse 90% 70% at 50% 30%, black 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 30%, black 30%, transparent 75%);
+  }
+
+  .bg-bloom {
+    position: absolute;
+    top: -12%;
+    left: 50%;
+    width: 1100px;
+    height: 900px;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, rgba(46, 74, 133, 0.09) 0%, rgba(46, 74, 133, 0.03) 45%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .bg-contours {
+    position: absolute;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.06;
+  }
+  .bg-contours.bottom-left { bottom: -40px; left: -80px; width: 480px; }
+  .bg-contours.bottom-right { bottom: -80px; right: -100px; width: 560px; transform: scaleX(-1); }
+
+  /* ============================================================
+     NAVBAR
+     ============================================================ */
+
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid transparent;
+    transition: background 400ms var(--ease-out), border-color 400ms var(--ease-out);
+  }
+
+  nav.scrolled {
+    background: rgba(246, 242, 233, 0.86);
+    -webkit-backdrop-filter: blur(14px);
+    backdrop-filter: blur(14px);
+    border-bottom-color: var(--line);
+  }
+
+  nav .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .nav-logo {
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  .nav-right {
+    display: flex;
+    gap: 28px;
+    align-items: center;
+  }
+
+  .nav-link {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    transition: color var(--dur) var(--ease-out);
+  }
+  .nav-link:hover { color: var(--ink); }
+
+  .nav-cta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--paper);
+    background: var(--ink);
+    padding: 9px 18px;
+    border-radius: 999px;
+    transition: background var(--dur) var(--ease-out);
+  }
+  .nav-cta:hover { background: var(--blue); }
+
+  .nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 8px;
+    color: var(--ink);
+  }
+
+  /* ============================================================
+     HERO — centered stack, off-axis annotations
+     ============================================================ */
+
+  .hero {
+    position: relative;
+    min-height: calc(100svh - 72px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 80px 24px 80px;
+    overflow: hidden;
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* hero URL morph */
+  .hero-morph {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 44px;
+    font-family: var(--font-mono);
+    font-size: 22px;
+    color: var(--ink-2);
+    letter-spacing: 0.01em;
+  }
+
+  .hero-morph #morphText {
+    transition: color 500ms var(--ease-out);
+  }
+  .hero-morph.settled #morphText {
+    color: var(--blue);
+  }
+
+  .hero-morph .cursor {
+    display: inline-block;
+    width: 1px;
+    height: 23px;
+    background: var(--blue);
+    margin-left: 2px;
+    animation: blink 1s step-end infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  .hero h1.title {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(46px, 7.2vw, 92px);
+    line-height: 1.04;
+    letter-spacing: -0.03em;
+    margin-bottom: 36px;
+    opacity: 0;
+    transform: translateY(14px);
+    animation: reveal-up 900ms var(--ease-out) forwards;
+    animation-delay: 1.85s;
+  }
+
+  .hero h1.title .accent {
+    color: var(--accent);
+  }
+
+  .hero .description {
+    max-width: 560px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    opacity: 0;
+    transform: translateY(14px);
+    animation: reveal-up 900ms var(--ease-out) forwards;
+    animation-delay: 2.1s;
+  }
+
+  .hero .description .punch {
+    font-weight: 500;
+    font-size: 19px;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+
+  .hero .description p.copy {
+    margin-top: 10px;
+    color: var(--ink-2);
+    font-size: 16px;
+    line-height: 1.7;
+  }
+
+  @keyframes reveal-up {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* off-axis annotations */
+  .hero-annot {
+    position: absolute;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    opacity: 0;
+    animation: fade-in 800ms var(--ease-out) forwards;
+  }
+  .hero-annot.left { left: 4.5vw; align-items: flex-start; animation-delay: 2.3s; }
+  .hero-annot.right { right: 4.5vw; align-items: flex-end; animation-delay: 2.5s; text-align: right; }
+
+  @keyframes fade-in { to { opacity: 1; } }
+
+  .hero-annot .rule {
+    width: 28px;
+    height: 1px;
+    background: var(--line-strong);
+  }
+
+  .hero-annot.left .here {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+  }
+
+  .hero-annot.left .mark {
+    color: var(--accent);
+    font-size: 11px;
+    margin-bottom: 2px;
+  }
+
+  .hero-annot.right .map-line {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 19px;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
+    color: var(--ink-2);
+  }
+
+  .scroll-indicator {
+    position: absolute;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    color: var(--ink-3);
+    opacity: 0;
+    animation: fade-pulse 3.2s ease-in-out infinite;
+    animation-delay: 3s;
+  }
+
+  @keyframes fade-pulse {
+    0% { opacity: 0; }
+    35% { opacity: 0.6; }
+    65% { opacity: 0.6; }
+    100% { opacity: 0; }
+  }
+
+  /* ============================================================
+     TRANSITION — "Atlas is being built around three ideas."
+     ============================================================ */
+
+  .transition {
+    position: relative;
+    z-index: 1;
+    padding: 110px 24px 100px;
+  }
+
+  .transition .inner {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  .transition .rule {
+    flex: 1;
+    height: 1px;
+    background: var(--line-strong);
+    position: relative;
+  }
+  .transition .rule::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: -1px;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--accent);
+    opacity: 0.7;
+  }
+
+  .transition p {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 22px;
+    letter-spacing: -0.01em;
+    color: var(--ink-2);
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  /* ============================================================
+     CARDS — 01 Research Agent / 02 Platform / 03 Skill
+     ============================================================ */
+
+  .cards-section {
+    position: relative;
+    z-index: 1;
+    padding: 0 32px 150px;
+  }
+
+  .cards {
+    max-width: var(--container);
+    margin: 0 auto;
+    display: flex;
+    gap: 28px;
+  }
+
+  .card {
+    flex: 1;
+    min-width: 0;
+    position: relative;
+    height: 440px;
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: transform var(--dur) var(--ease-out),
+                border-color var(--dur) var(--ease-out),
+                box-shadow var(--dur) var(--ease-out);
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(46, 74, 133, 0.45);
+    box-shadow: 0 28px 48px -28px rgba(32, 28, 22, 0.18);
+  }
+
+  .card-index {
+    position: absolute;
+    top: 20px;
+    right: 22px;
+    z-index: 2;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--ink-3);
+  }
+
+  .card-illustration {
+    height: 190px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--soft-blue);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-illustration svg {
+    transition: transform 500ms var(--ease-out);
+  }
+
+  .card:hover .card-illustration svg {
+    transform: scale(1.04);
+  }
+
+  .card-body {
+    padding: 26px 28px 28px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .card-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    margin-bottom: 12px;
+  }
+
+  .card-badge .dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--blue);
+  }
+  .card-badge.warn .dot { background: var(--accent); }
+
+  .card h3 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 26px;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+
+  .card p.desc {
+    color: var(--ink-2);
+    font-size: 14.5px;
+    line-height: 1.65;
+    flex: 1;
+  }
+
+  .card-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.03em;
+    margin-top: 20px;
+    color: var(--blue);
+    transition: color var(--dur) var(--ease-out);
+  }
+  .card-cta:hover { color: var(--blue-deep); }
+
+  .card-cta svg {
+    width: 13px;
+    height: 13px;
+    transition: transform var(--dur) var(--ease-out);
+  }
+  .card:hover .card-cta svg {
+    transform: translate(2px, -2px);
+  }
+
+  .card-cta.disabled {
+    color: var(--ink-3);
+    cursor: default;
+  }
+  .card-cta.disabled svg { display: none; }
+
+  /* ============================================================
+     WAITLIST
+     ============================================================ */
+
+  .waitlist {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 20px 24px 160px;
+  }
+
+  .waitlist .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    margin-bottom: 22px;
+  }
+
+  .waitlist h2 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(30px, 4.2vw, 46px);
+    letter-spacing: -0.03em;
+    line-height: 1.12;
+    margin-bottom: 18px;
+  }
+
+  .waitlist .copy {
+    color: var(--ink-2);
+    font-size: 16px;
+    max-width: 440px;
+    margin: 0 auto 40px;
+  }
+
+  .waitlist-form {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    align-items: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .waitlist-form input {
+    font-family: var(--font-sans);
+    font-size: 15px;
+    color: var(--ink);
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--line-strong);
+    padding: 10px 2px;
+    width: 300px;
+    outline: none;
+    transition: border-color var(--dur) var(--ease-out);
+  }
+  .waitlist-form input::placeholder { color: var(--ink-3); }
+  .waitlist-form input:focus { border-bottom-color: var(--blue); }
+
+  .waitlist-form button {
+    font-family: var(--font-sans);
+    font-weight: 500;
+    font-size: 14.5px;
+    color: var(--paper);
+    background: var(--ink);
+    border: none;
+    cursor: pointer;
+    padding: 11px 26px;
+    border-radius: 999px;
+    transition: background var(--dur) var(--ease-out), transform var(--dur) var(--ease-out);
+  }
+  .waitlist-form button:hover { background: var(--blue); transform: translateY(-1px); }
+
+  .waitlist .fineprint {
+    margin-top: 20px;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    color: var(--ink-3);
+  }
+
+  .waitlist-success {
+    display: none;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 21px;
+    letter-spacing: -0.01em;
+    color: var(--blue);
+    padding: 14px 0;
+  }
+  .waitlist-success .mark { color: var(--accent); font-style: normal; margin-right: 8px; }
+  .waitlist-success.show { display: block; animation: reveal-up 600ms var(--ease-out); }
+
+  /* ============================================================
+     PHILOSOPHY
+     ============================================================ */
+
+  .philosophy {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 60px 24px 170px;
+  }
+
+  .philosophy p {
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: clamp(30px, 4.4vw, 48px);
+    line-height: 1.25;
+    letter-spacing: -0.025em;
+    max-width: 620px;
+    margin: 0 auto;
+  }
+
+  .philosophy .star {
+    display: block;
+    color: var(--accent);
+    font-size: 13px;
+    margin: 34px 0 14px;
+    animation: spin-slow 24s linear infinite;
+  }
+
+  @keyframes spin-slow { to { transform: rotate(360deg); } }
+
+  .philosophy .lat {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--ink-3);
+  }
+
+  /* scroll reveal utility */
+  .reveal {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 800ms var(--ease-out), transform 800ms var(--ease-out);
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ============================================================
+     FOOTER
+     ============================================================ */
+
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--line);
+    padding: 30px 32px;
+  }
+
+  footer .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .footer-left {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .footer-logo {
+    font-family: var(--font-display);
+    font-size: 17px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 24px;
+  }
+
+  .footer-links a {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-3);
+    transition: color var(--dur) var(--ease-out);
+  }
+  .footer-links a:hover { color: var(--ink); }
+
+  .footer-right {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .footer-tag {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    color: var(--ink-3);
+  }
+
+  .footer-coords {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    color: var(--ink-3);
+    opacity: 0.8;
+  }
+
+  /* ============================================================
+     RESPONSIVE
+     ============================================================ */
+
+  @media (max-width: 1020px) {
+    .hero-annot { display: none; }
+  }
+
+  @media (max-width: 900px) {
+    .cards { flex-wrap: wrap; }
+    .card { flex: 1 1 calc(50% - 14px); }
+    .transition .rule { flex: 0; width: 28px; }
+  }
+
+  @media (max-width: 720px) {
+    .container { padding: 0 24px; }
+    .cards-section { padding: 0 24px 110px; }
+    .hero { padding-top: 60px; }
+    .hero h1.title { font-size: clamp(40px, 11vw, 58px); }
+    .nav-right .nav-link { display: none; }
+    .nav-cta { display: none; }
+    .card { flex: 1 1 100%; height: auto; min-height: 400px; }
+    .transition p { font-size: 19px; white-space: normal; }
+    footer .container { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+  <!-- Paper grain -->
+  <svg class="bg-grain" width="100%" height="100%" preserveAspectRatio="none" aria-hidden="true">
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch"></feTurbulence>
+      <feColorMatrix type="saturate" values="0"></feColorMatrix>
+    </filter>
+    <rect width="100%" height="100%" filter="url(#grain)"></rect>
+  </svg>
+
+  <!-- Faint survey grid -->
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <!-- ============================================================
+       NAV
+       ============================================================ -->
+  <nav id="nav">
+    <div class="container">
+      <a href="#" class="nav-logo">/atlas</a>
+      <div class="nav-right" id="navRight">
+        <a href="https://github.com/" target="_blank" rel="noopener" class="nav-link">GitHub</a>
+        <a href="#waitlist" class="nav-cta">Join the waitlist</a>
+      </div>
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M2 5h16M2 10h16M2 15h16" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       HERO
+       ============================================================ -->
+  <section class="hero">
+
+    <div class="bg-bloom" aria-hidden="true"></div>
+
+    <!-- graph fragment, top-left -->
+    <svg class="bg-graph" style="position:absolute; top: 14%; left: 7%; width: 230px; height: 230px;" viewBox="0 0 230 230" fill="none" aria-hidden="true">
+      <circle cx="30" cy="40" r="2.5" fill="#2E4A85" opacity="0.45"/>
+      <circle cx="80" cy="20" r="2" fill="#2E4A85" opacity="0.3"/>
+      <circle cx="60" cy="90" r="3" fill="#2E4A85" opacity="0.5"/>
+      <circle cx="130" cy="70" r="1.8" fill="#2E4A85" opacity="0.28"/>
+      <line x1="30" y1="40" x2="60" y2="90" stroke="#2E4A85" stroke-width="0.6" opacity="0.22"/>
+      <line x1="60" y1="90" x2="130" y2="70" stroke="#2E4A85" stroke-width="0.6" opacity="0.18"/>
+      <line x1="80" y1="20" x2="30" y2="40" stroke="#2E4A85" stroke-width="0.6" opacity="0.16"/>
+      <!-- signal traveling the edges, every 8s -->
+      <circle r="2" fill="#66A3FF">
+        <animateMotion dur="8s" repeatCount="indefinite" path="M30 40 L60 90 L130 70"/>
+      </circle>
+      <text x="4" y="130" font-family="Geist Mono, monospace" font-size="8" fill="#6E675C" opacity="0.45">vault</text>
+    </svg>
+
+    <!-- graph fragment, bottom-right -->
+    <svg class="bg-graph" style="position:absolute; bottom: 12%; right: 6%; width: 210px; height: 210px;" viewBox="0 0 210 210" fill="none" aria-hidden="true">
+      <circle cx="150" cy="150" r="3" fill="#2E4A85" opacity="0.45"/>
+      <circle cx="110" cy="120" r="2" fill="#2E4A85" opacity="0.28"/>
+      <circle cx="170" cy="100" r="1.8" fill="#2E4A85" opacity="0.28"/>
+      <line x1="150" y1="150" x2="110" y2="120" stroke="#2E4A85" stroke-width="0.6" opacity="0.18"/>
+      <line x1="110" y1="120" x2="170" y2="100" stroke="#2E4A85" stroke-width="0.6" opacity="0.16"/>
+      <text x="112" y="188" font-family="Geist Mono, monospace" font-size="8" fill="#6E675C" opacity="0.45">map</text>
+    </svg>
+
+    <!-- topographic contours, bottom corners -->
+    <svg class="bg-contours bottom-left" viewBox="0 0 480 320" fill="none" aria-hidden="true">
+      <path d="M-20 260 Q 100 200 220 260 T 500 250" stroke="#201C16" stroke-width="1"/>
+      <path d="M-20 290 Q 110 235 230 290 T 500 280" stroke="#201C16" stroke-width="1"/>
+      <path d="M-20 320 Q 120 270 240 320 T 500 310" stroke="#201C16" stroke-width="1"/>
+    </svg>
+    <svg class="bg-contours bottom-right" viewBox="0 0 560 320" fill="none" aria-hidden="true">
+      <path d="M-20 260 Q 130 190 260 260 T 580 250" stroke="#201C16" stroke-width="1"/>
+      <path d="M-20 295 Q 140 230 270 295 T 580 285" stroke="#201C16" stroke-width="1"/>
+    </svg>
+
+    <!-- left annotation — coordinates -->
+    <div class="hero-annot left" aria-hidden="true">
+      <span class="mark">&#10022;</span>
+      <span class="rule"></span>
+      <span class="here">You are here</span>
+    </div>
+
+    <!-- right annotation — the map line -->
+    <div class="hero-annot right" aria-hidden="true">
+      <span class="map-line">Knowledge is a map,<br>not a list.</span>
+      <span class="rule"></span>
+    </div>
+
+    <div class="hero-inner">
+      <div class="hero-morph" id="heroMorph" aria-label="/atlas">
+        <span id="morphText"></span><span class="cursor" id="morphCursor" style="opacity:0;"></span>
+      </div>
+
+      <h1 class="title">Learning how to <span class="accent">Learn.</span></h1>
+
+      <div class="description">
+        <p class="punch">AI made information abundant.</p>
+        <p class="punch">Learning is still scarce.</p>
+        <p class="copy">Atlas is a suite of tools, a skill and a platform — built to help you learn anything, without first figuring out how.</p>
+      </div>
+    </div>
+
+    <div class="scroll-indicator" aria-hidden="true">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2v11M3 9l5 5 5-5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       TRANSITION — three ideas
+       ============================================================ -->
+  <div class="transition reveal">
+    <div class="inner">
+      <span class="rule"></span>
+      <p>Atlas is being built around three ideas.</p>
+      <span class="rule"></span>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       CARDS
+       ============================================================ -->
+  <section class="cards-section">
+    <div class="cards">
+
+      <!-- 01 — Research Agent -->
+      <article class="card reveal" style="transition-delay: 60ms;">
+        <span class="card-index">01</span>
+        <div class="card-illustration">
+          <svg width="260" height="152" viewBox="0 0 260 152" fill="none">
+            <!-- note panel -->
+            <rect x="10" y="8" width="240" height="136" rx="12" fill="#FCFAF4" stroke="#201C16" stroke-opacity="0.12"/>
+            <!-- graph edges, hub (110,42) to every other note -->
+            <line x1="110" y1="42" x2="52" y2="42" stroke="#201C16" stroke-width="0.8" opacity="0.28"/>
+            <line x1="110" y1="42" x2="168" y2="42" stroke="#201C16" stroke-width="0.8" opacity="0.28"/>
+            <line x1="110" y1="42" x2="66" y2="100" stroke="#201C16" stroke-width="0.8" opacity="0.22"/>
+            <line x1="110" y1="42" x2="124" y2="100" stroke="#201C16" stroke-width="0.8" opacity="0.22"/>
+            <line x1="110" y1="42" x2="182" y2="100" stroke="#201C16" stroke-width="0.8" opacity="0.22"/>
+            <line x1="52" y1="42" x2="66" y2="100" stroke="#201C16" stroke-width="0.8" opacity="0.18"/>
+            <line x1="168" y1="42" x2="182" y2="100" stroke="#201C16" stroke-width="0.8" opacity="0.18"/>
+            <line x1="124" y1="100" x2="182" y2="100" stroke="#201C16" stroke-width="0.8" opacity="0.16"/>
+            <!-- notes, top row -->
+            <rect x="26" y="26" width="52" height="32" rx="5" fill="#FCFAF4" stroke="#201C16" stroke-opacity="0.3"/>
+            <rect x="84" y="26" width="52" height="32" rx="5" fill="#FCFAF4" stroke="#2E4A85" stroke-opacity="0.55"/>
+            <rect x="142" y="26" width="52" height="32" rx="5" fill="#FCFAF4" stroke="#201C16" stroke-opacity="0.3"/>
+            <!-- notes, bottom row -->
+            <rect x="40" y="84" width="52" height="32" rx="5" fill="#FCFAF4" stroke="#201C16" stroke-opacity="0.3"/>
+            <rect x="98" y="84" width="52" height="32" rx="5" fill="#FCFAF4" stroke="#201C16" stroke-opacity="0.3"/>
+            <rect x="156" y="84" width="52" height="32" rx="5" fill="#FCFAF4" stroke="#201C16" stroke-opacity="0.3"/>
+            <!-- pulsing hub -->
+            <circle cx="110" cy="42" r="14" fill="#66A3FF" opacity="0.14">
+              <animate attributeName="r" values="10;16;10" dur="3s" repeatCount="indefinite"/>
+              <animate attributeName="opacity" values="0.2;0.06;0.2" dur="3s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="110" cy="42" r="4" fill="#2E4A85"/>
+            <!-- label -->
+            <text x="26" y="132" font-family="Geist Mono, monospace" font-size="7.5" fill="#2E4A85" opacity="0.8">obsidian://vault</text>
+          </svg>
+        </div>
+        <div class="card-body">
+          <div class="card-badge"><span class="dot"></span>Available</div>
+          <h3>Research Agent</h3>
+          <p class="desc">A local Obsidian agent that reads, connects and surfaces your notes — so your vault becomes something you can think with, not just store things in.</p>
+          <a href="https://github.com/" target="_blank" rel="noopener" class="card-cta">
+            View on GitHub
+            <svg viewBox="0 0 16 16" fill="none"><path d="M4 12L12 4M12 4H5M12 4V11" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </article>
+
+      <!-- 02 — Platform -->
+      <article class="card reveal" style="transition-delay: 140ms;">
+        <span class="card-index">02</span>
+        <div class="card-illustration">
+          <svg width="260" height="152" viewBox="0 0 260 152" fill="none">
+            <rect x="10" y="8" width="240" height="136" rx="12" fill="#FCFAF4" stroke="#201C16" stroke-opacity="0.12"/>
+            <!-- faint alternative route -->
+            <path d="M30 118 C 78 128, 118 104, 166 114 S 234 110, 236 90" stroke="#2E4A85" stroke-width="1" stroke-dasharray="2 5" opacity="0.3"/>
+            <!-- main route, drawn through every waypoint -->
+            <path d="M30 128 C 40 127, 47 122, 55 120 C 70 117, 83 110, 95 104 C 112 98, 126 92, 140 86 C 158 80, 171 71, 185 62 C 199 54, 211 48, 222 44" stroke="#201C16" stroke-width="1.4" opacity="0.75"/>
+            <path d="M30 128 C 40 127, 47 122, 55 120 C 70 117, 83 110, 95 104 C 112 98, 126 92, 140 86 C 158 80, 171 71, 185 62 C 199 54, 211 48, 222 44" stroke="#2E4A85" stroke-width="1.4" stroke-dasharray="1 9" stroke-linecap="round"/>
+            <!-- start -->
+            <circle cx="30" cy="128" r="5" fill="#FCFAF4" stroke="#2E4A85" stroke-width="1.6"/>
+            <text x="30" y="143" text-anchor="middle" font-family="Geist Mono, monospace" font-size="7" fill="#201C16" opacity="0.6">start</text>
+            <!-- waypoints, centered on the path -->
+            <circle cx="55" cy="120" r="3.2" fill="#2E4A85"/>
+            <text x="55" y="112" text-anchor="middle" font-family="Geist Mono, monospace" font-size="7" fill="#201C16" opacity="0.6">01</text>
+            <circle cx="95" cy="104" r="3.2" fill="#2E4A85"/>
+            <text x="95" y="96" text-anchor="middle" font-family="Geist Mono, monospace" font-size="7" fill="#201C16" opacity="0.6">02</text>
+            <circle cx="140" cy="86" r="3.2" fill="#2E4A85"/>
+            <text x="140" y="78" text-anchor="middle" font-family="Geist Mono, monospace" font-size="7" fill="#201C16" opacity="0.6">03</text>
+            <!-- destination star, centered on the path end -->
+            <path d="M222 35 L225.2 41.8 L232 45 L225.2 48.2 L222 55 L218.8 48.2 L212 45 L218.8 41.8 Z" fill="#66A3FF"/>
+            <text x="222" y="29" text-anchor="middle" font-family="Geist Mono, monospace" font-size="7" fill="#201C16" opacity="0.6">04</text>
+            <text x="250" y="141" text-anchor="end" font-family="Geist Mono, monospace" font-size="7.5" fill="#2E4A85" opacity="0.8">slash-atlas.live/platform</text>
+          </svg>
+        </div>
+        <div class="card-body">
+          <div class="card-badge warn"><span class="dot"></span>Coming soon</div>
+          <h3>Platform</h3>
+          <p class="desc">A home for structured learning paths — where what you want to know turns into a route worth following, not another list of resources.</p>
+          <span class="card-cta disabled">Coming soon</span>
+        </div>
+      </article>
+
+      <!-- 03 — Skill -->
+      <article class="card reveal" style="transition-delay: 220ms;">
+        <span class="card-index">03</span>
+        <div class="card-illustration">
+          <svg width="260" height="152" viewBox="0 0 260 152" fill="none">
+            <rect x="10" y="8" width="240" height="136" rx="12" fill="#FCFAF4" stroke="#201C16" stroke-opacity="0.12"/>
+            <!-- the skill file -->
+            <rect x="60" y="16" width="140" height="120" rx="10" fill="#FCFAF4" stroke="#201C16" stroke-opacity="0.28"/>
+            <path d="M200 16 L200 40 L176 40 Z" fill="#E7ECF5" stroke="#201C16" stroke-opacity="0.28" stroke-linejoin="round"/>
+            <!-- window dots -->
+            <circle cx="74" cy="30" r="2.2" fill="#66A3FF"/>
+            <circle cx="82" cy="30" r="2.2" fill="#2E4A85" opacity="0.7"/>
+            <circle cx="90" cy="30" r="2.2" fill="#201C16" opacity="0.3"/>
+            <!-- file contents -->
+            <text x="74" y="56" font-family="Geist Mono, monospace" font-size="9" fill="#2E4A85" font-weight="500">/atlas.skill</text>
+            <text x="74" y="74" font-family="Geist Mono, monospace" font-size="7.5" fill="#201C16" opacity="0.65">learn:</text>
+            <text x="110" y="74" font-family="Geist Mono, monospace" font-size="7.5" fill="#201C16" opacity="0.4">anything</text>
+            <text x="74" y="88" font-family="Geist Mono, monospace" font-size="7.5" fill="#201C16" opacity="0.65">context:</text>
+            <text x="110" y="88" font-family="Geist Mono, monospace" font-size="7.5" fill="#201C16" opacity="0.4">your vault</text>
+            <text x="74" y="102" font-family="Geist Mono, monospace" font-size="7.5" fill="#201C16" opacity="0.65">sources:</text>
+            <text x="110" y="102" font-family="Geist Mono, monospace" font-size="7.5" fill="#201C16" opacity="0.4">curated</text>
+            <text x="74" y="116" font-family="Geist Mono, monospace" font-size="7.5" fill="#201C16" opacity="0.65">memory:</text>
+            <text x="110" y="116" font-family="Geist Mono, monospace" font-size="7.5" fill="#201C16" opacity="0.4">atlas.json</text>
+            <!-- download chip -->
+            <rect x="148" y="96" width="40" height="26" rx="13" fill="#2E4A85"/>
+            <path d="M168 105.5 v7 M165 108.5 l3 3 3-3" stroke="#F6F2E9" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="card-body">
+          <div class="card-badge"><span class="dot"></span>Available</div>
+          <h3>Skill</h3>
+          <p class="desc">A portable skill file for Claude Code, Codex and other AI tools — teach any agent how you want to learn, once, and carry it everywhere.</p>
+          <a href="https://github.com/" target="_blank" rel="noopener" class="card-cta">
+            Download
+            <svg viewBox="0 0 16 16" fill="none"><path d="M8 2v9M4.5 8L8 11.5 11.5 8M3 14h10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ============================================================
+       WAITLIST
+       ============================================================ -->
+  <section class="waitlist reveal" id="waitlist">
+    <p class="eyebrow">The platform</p>
+    <h2>The map is still<br>being drawn.</h2>
+    <p class="copy">Structured paths for anything you want to learn — that's next. Leave an email and we'll write when it's ready.</p>
+
+    <form class="waitlist-form" id="waitlistForm" novalidate>
+      <input type="email" id="waitlistEmail" placeholder="you@somewhere.com" aria-label="Email address" required>
+      <button type="submit">Join the waitlist</button>
+    </form>
+    <p class="waitlist-success" id="waitlistSuccess" role="status"><span class="mark">&#10022;</span>You're on the map. We'll write when it's ready.</p>
+    <p class="fineprint">No noise. One note when it ships.</p>
+  </section>
+
+  <!-- ============================================================
+       PHILOSOPHY
+       ============================================================ -->
+  <section class="philosophy reveal">
+    <p>You decide what to learn.<br>Atlas handles how.</p>
+    <span class="star">&#10022;</span>
+    <span class="lat">learning, mapped.</span>
+  </section>
+
+  <!-- ============================================================
+       FOOTER
+       ============================================================ -->
+  <footer>
+    <div class="container">
+      <div class="footer-left">
+        <span class="footer-logo">/atlas</span>
+        <div class="footer-links">
+          <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+          <a href="#">Docs</a>
+          <a href="#">Privacy</a>
+        </div>
+      </div>
+      <div class="footer-right">
+        <span class="footer-tag">Built with curiosity.</span>
+        <span class="footer-coords">slash-atlas.live</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ============================================================
+    // Hero URL morph: slash-atlas.live -> slash-atlas -> /atlas
+    // Never loops. Settles into blue. Cursor blinks after.
+    // ============================================================
+    (function () {
+      var el = document.getElementById('morphText');
+      var cursor = document.getElementById('morphCursor');
+      var heroMorph = document.getElementById('heroMorph');
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      var full = 'slash-atlas.live';
+      var mid = 'slash-atlas';
+      var final = '/atlas';
+
+      if (reduceMotion) {
+        el.textContent = final;
+        cursor.style.opacity = '1';
+        document.querySelectorAll('.hero .title, .hero .description, .hero-annot').forEach(function (n) {
+          n.style.animation = 'none';
+          n.style.opacity = '1';
+          n.style.transform = 'none';
+        });
+        return;
+      }
+
+      el.textContent = full;
+
+      var step1Delay = 550;
+      var step2Delay = 1150;
+      var step3Delay = 1550;
+
+      setTimeout(function () {
+        typeDelete(full, mid, 40);
+      }, step1Delay);
+
+      setTimeout(function () {
+        typeDelete(mid, 'atlas', 40, function () {
+          el.textContent = '/atlas';
+          heroMorph.classList.add('settled');
+        });
+      }, step2Delay);
+
+      setTimeout(function () {
+        cursor.style.opacity = '1';
+      }, step3Delay + 200);
+
+      function typeDelete(from, to, speed, done) {
+        var i = from.length;
+        var interval = setInterval(function () {
+          if (i <= to.length) {
+            clearInterval(interval);
+            el.textContent = to;
+            if (done) done();
+            return;
+          }
+          i--;
+          el.textContent = from.slice(0, i);
+        }, speed);
+      }
+    })();
+
+    // ============================================================
+    // Sticky nav — gains blur + border once scrolled
+    // ============================================================
+    (function () {
+      var nav = document.getElementById('nav');
+      var onScroll = function () {
+        nav.classList.toggle('scrolled', window.scrollY > 8);
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      onScroll();
+    })();
+
+    // ============================================================
+    // Scroll reveal
+    // ============================================================
+    (function () {
+      var targets = document.querySelectorAll('.reveal');
+      if (!('IntersectionObserver' in window)) {
+        targets.forEach(function (t) { t.classList.add('is-visible'); });
+        return;
+      }
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+      targets.forEach(function (t) { io.observe(t); });
+    })();
+
+    // ============================================================
+    // Waitlist — front-end only for now
+    // Swap the submit handler for a real endpoint when it exists.
+    // ============================================================
+    (function () {
+      var form = document.getElementById('waitlistForm');
+      var success = document.getElementById('waitlistSuccess');
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var email = document.getElementById('waitlistEmail');
+        if (!email.value || !/^\S+@\S+\.\S+$/.test(email.value)) {
+          email.style.borderBottomColor = '#66A3FF';
+          return;
+        }
+        form.style.display = 'none';
+        success.classList.add('show');
+      });
+    })();
+  </script>
+
+</body>
+</html>
