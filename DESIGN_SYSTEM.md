@@ -196,5 +196,5 @@ Tone: first person ("I'm Harsh — the one building Atlas."), calm, no hype, no 
 - Single self-contained `index.html` — no build step. All CSS in one `<style>`, all JS in one `<script>`.
 - Fonts: General Sans via Fontshare CDN; Geist (logo only) + Geist Mono via Google Fonts. All have system fallbacks.
 - Favicon and OG tags are inline / in `<head>`; `og:image` expects an `og.png` in the site root (not yet added).
-- Real URLs: obsidian-agent → `github.com/slash-atlas/obsidian-agent`; general GitHub → `github.com/slash-atlas` (the org page aggregates all Atlas repos); connect → `linkedin.com/in/harsh-jos`.
+- Real URLs: obsidian-agent → `github.com/slash-atlas/obsidian-agent`; skill → `github.com/slash-atlas/atlas-skill`; general GitHub → `github.com/slash-atlas` (the org page aggregates all Atlas repos); connect → `linkedin.com/in/harsh-jos`.
 - To re-skin: change the tokens in `:root`. The system is token-driven; nothing is hardcoded except inline SVG fills (noted in the illustration section).
